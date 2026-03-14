@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.spmenais.paincare"
-        mminSdkVersion_INVALIDE 21
+        minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0"
