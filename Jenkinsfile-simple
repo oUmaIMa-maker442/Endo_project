@@ -1,0 +1,55 @@
+pipeline {
+agent any
+
+environment {
+DOCKER_IMAGE = "oumaima442/endo-mhealth"
+DOCKER_TAG = "simple-${BUILD_NUMBER}"
+}
+
+stages {
+
+stage('1 - Checkout') {
+steps {
+git branch: 'feature/ci-cd-pipeline',
+credentialsId: 'github-credentials',
+url: 'https://github.com/oUmaIMa-maker442/Endo_project.git'
+echo "Code clone - Build numero : ${BUILD_NUMBER}"
+echo "Commit : ${GIT_COMMIT}"
+}
+}
+
+stage('2 - Build Gradle') {
+steps {
+bat 'gradlew.bat clean assembleDebug --no-daemon'
+echo "APK genere avec succes"
+}
+post {
+success {
+archiveArtifacts artifacts: 'app/build/outputs/apk/**/*.apk',
+fingerprint: true
+echo "APK archive dans Jenkins"
+}
+failure {
+echo "ECHEC du build Gradle"
+}
+}
+}
+stage('3 - Verify APK') {
+steps {
+bat 'dir app\build\outputs\apk\debug\'
+echo "Verification APK terminee"
+}
+}
+}
+post {
+success {
+echo "PIPELINE SIMPLE REUSSI - Build ${BUILD_NUMBER}"
+}
+failure {
+echo "PIPELINE SIMPLE ECHOUE - Build ${BUILD_NUMBER} - Pas de rollback"
+}
+always {
+echo "Duree totale : ${currentBuild.durationString}"
+}
+}
+}
