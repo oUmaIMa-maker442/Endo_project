@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.spmenais.paincare'
-    compileSdk 99
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.spmenais.paincare"
