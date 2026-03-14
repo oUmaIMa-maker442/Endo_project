@@ -36,7 +36,7 @@ echo "ECHEC du build Gradle"
 }
 stage('3 - Verify APK') {
 steps {
-bat 'dir app\build\outputs\apk\debug\'
+bat 'dir app\\build\\outputs\\apk\\debug\\'
 echo "Verification APK terminee"
 }
 }
