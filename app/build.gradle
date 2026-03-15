@@ -86,11 +86,12 @@ dependencies {
 }
 sonar {
     properties {
-        property "sonar.projectKey", "endo-mhealth"
+        property "sonar.projectKey", "Endo-mHealth"
         property "sonar.projectName", "Endo mHealth"
         property "sonar.host.url", "http://localhost:9005"
-        property "sonar.sources", "app/src/main"
-        property "sonar.tests", "app/src/test"
+        property "sonar.token", "squ_05b6dcde84a229dab9336361735e67a36df5bc57"
+        property "sonar.sources", "src/main"
+        //property "sonar.tests", "app/src/test"
         property "sonar.java.source", "11"
     }
 }
