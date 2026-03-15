@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
 }
+apply plugin: 'org.sonarqube'
 
 android {
     namespace 'com.spmenais.paincare'
@@ -82,4 +83,14 @@ dependencies {
     implementation 'com.github.prolificinteractive:material-calendarview:1.6.0'
 
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
+}
+sonar {
+    properties {
+        property "sonar.projectKey", "endo-mhealth"
+        property "sonar.projectName", "Endo mHealth"
+        property "sonar.host.url", "http://localhost:9005"
+        property "sonar.sources", "app/src/main"
+        property "sonar.tests", "app/src/test"
+        property "sonar.java.source", "11"
+    }
 }
