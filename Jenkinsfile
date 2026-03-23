@@ -46,15 +46,22 @@ echo "ECHEC tests - deploiement bloque"
 }
 }
 stage('4 - Analyse SonarQube') {
-steps {
-withSonarQubeEnv('SonarQube-Local') {
-bat """gradlew.bat sonar ^-Dsonar.projectKey=endo-mhealth ^-Dsonar.projectName=Endo-mHealth ^-Dsonar.host.url=%SONAR_HOST_URL% ^-Dsonar.token=%SONAR_TOKEN% ^--no-daemon"""
-}
-timeout(time: 5, unit: 'MINUTES') {
-waitForQualityGate abortPipeline: true
-}
-echo "Quality Gate passe"
-}
+    steps {
+        withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('SonarQube-Local') {
+                bat """gradlew.bat sonar ^
+                -Dsonar.projectKey=endo-mhealth ^
+                -Dsonar.projectName=Endo-mHealth ^
+                -Dsonar.host.url=http://localhost:9005 ^
+                -Dsonar.token=%SONAR_TOKEN% ^
+                --no-daemon"""
+            }
+        }
+        timeout(time: 5, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
+        echo "Quality Gate passe"
+    }
 }
 stage('5 - Docker Build et Push') {
 steps {
