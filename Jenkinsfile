@@ -45,6 +45,7 @@ echo "ECHEC tests - deploiement bloque"
 }
 }
 }
+
 stage('4 - Analyse SonarQube') {
     steps {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
