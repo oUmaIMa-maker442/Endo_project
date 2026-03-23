@@ -51,7 +51,7 @@ stage('4 - Analyse SonarQube') {
         withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
             withSonarQubeEnv('SonarQube-Local') {
                 bat """gradlew.bat sonar ^
-                -Dsonar.projectKey=endo-mhealth ^
+                -Dsonar.projectKey=Endo-mHealth ^
                 -Dsonar.projectName=Endo-mHealth ^
                 -Dsonar.host.url=http://localhost:9005 ^
                 -Dsonar.token=%SONAR_TOKEN% ^
