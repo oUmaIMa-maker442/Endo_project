@@ -58,7 +58,8 @@ stage('4 - Analyse SonarQube') {
                 --no-daemon"""
             }
         }
-        timeout(time: 5, unit: 'MINUTES') {
+        sleep(time: 30, unit: 'SECONDS')
+        timeout(time: 15, unit: 'MINUTES') {
             waitForQualityGate abortPipeline: true
         }
         echo "Quality Gate passe"
