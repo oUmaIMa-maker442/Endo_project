@@ -32,6 +32,12 @@ android {
         viewBinding true
         dataBinding true
     }
+    testOptions {
+        unitTests.all {
+            jvmArgs '-Xmx512m', '-XX:MaxPermSize=256m'
+            maxHeapSize = "512m"
+        }
+    }
 }
 
 dependencies {
