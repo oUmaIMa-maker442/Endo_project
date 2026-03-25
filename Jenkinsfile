@@ -56,11 +56,13 @@ stage('4 - Analyse SonarQube') {
                 -Dsonar.host.url=http://localhost:9005 ^
                 -Dsonar.token=%SONAR_TOKEN% ^
                 --no-daemon"""
+
+                sleep(time: 30, unit: 'SECONDS')
+
+                timeout(time: 15, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
-        }
-        sleep(time: 30, unit: 'SECONDS')
-        timeout(time: 15, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
         }
         echo "Quality Gate passe"
     }
