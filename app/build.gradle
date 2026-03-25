@@ -34,7 +34,7 @@ android {
     }
     testOptions {
         unitTests.all {
-            jvmArgs '-Xmx512m', '-XX:MaxPermSize=256m'
+            jvmArgs '-Xmx512m'
             maxHeapSize = "512m"
         }
     }
