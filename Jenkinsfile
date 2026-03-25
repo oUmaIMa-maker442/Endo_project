@@ -48,26 +48,24 @@ pipeline {
         }
 
         stage('4 - Analyse SonarQube') {
-            steps {
-                withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
-                    withSonarQubeEnv('SonarQube-Local') {
-                        bat """gradlew.bat sonar ^
-                        -Dsonar.projectKey=Endo-mHealth ^
-                        -Dsonar.projectName=Endo-mHealth ^
-                        -Dsonar.host.url=http://localhost:9005 ^
-                        -Dsonar.token=%SONAR_TOKEN% ^
-                        --no-daemon"""
-
-                        sleep(time: 30, unit: 'SECONDS')
-
-                        timeout(time: 15, unit: 'MINUTES') {
-                            waitForQualityGate abortPipeline: true
-                        }
-                    }
-                }
-                echo "Quality Gate passe"
+           steps {
+            withCredentials([string(credentialsId: 'sonar-token', variable: 'SONAR_TOKEN')]) {
+            withSonarQubeEnv('SonarQube-Local') {
+                bat """gradlew.bat sonar ^
+                -Dsonar.projectKey=Endo-mHealth ^
+                -Dsonar.projectName=Endo-mHealth ^
+                -Dsonar.host.url=http://localhost:9005 ^
+                -Dsonar.token=%SONAR_TOKEN% ^
+                --no-daemon"""
             }
         }
+        sleep(time: 30, unit: 'SECONDS')
+        timeout(time: 15, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+        }
+        echo "Quality Gate passe"
+    }
+}
 
         stage('5 - Docker Build et Push') {
             steps {
