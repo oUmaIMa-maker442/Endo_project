@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk-slim AS builder
+FROM eclipse-temurin:17-jdk-jammy AS builder
 ENV ANDROID_SDK_ROOT=/opt/android-sdk
 ENV PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$ANDROID_SDK_ROOT/platform-tools
 ENV DEBIAN_FRONTEND=noninteractive
