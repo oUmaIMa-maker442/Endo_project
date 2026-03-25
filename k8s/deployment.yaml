@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: endo-deployment
+  namespace: mhealth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: endo-mhealth
+  template:
+    metadata:
+      labels:
+        app: endo-mhealth
+    spec:
+      containers:
+        - name: endo-mhealth
+          image: oumaimalah/endo-mhealth:latest
+          ports:
+            - containerPort: 8080
