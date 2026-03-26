@@ -6,6 +6,7 @@ pipeline {
         DOCKER_TAG = "${BUILD_NUMBER}"
         SONAR_HOST_URL = "http://localhost:9005"
         ANDROID_HOME = "C:\\Users\\ADMIN\\AppData\\Local\\Android\\Sdk"
+        KUBECONFIG = "C:\\ProgramData\\Jenkins\\.kube\\config"
     }
 
     stages {
@@ -81,6 +82,10 @@ pipeline {
 
         stage('6 - Deploy Kubernetes') {
             steps {
+                bat 'kubectl config use-context minikube'
+                bat 'kubectl cluster-info'
+                bat 'kubectl get nodes'
+
                 bat 'kubectl apply -f k8s\\deployment.yaml'
                 bat 'kubectl apply -f k8s\\service.yaml'
                 bat 'kubectl rollout status deployment/endo-deployment -n mhealth --timeout=120s'
@@ -92,8 +97,6 @@ pipeline {
                 }
             }
         }
-    }
-
     post {
         success { echo "PIPELINE AVANCE REUSSI - Build ${BUILD_NUMBER}" }
         failure { echo "PIPELINE AVANCE ECHOUE - Build ${BUILD_NUMBER}" }
