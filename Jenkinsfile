@@ -97,6 +97,7 @@ pipeline {
                 }
             }
         }
+    }
     post {
         success { echo "PIPELINE AVANCE REUSSI - Build ${BUILD_NUMBER}" }
         failure { echo "PIPELINE AVANCE ECHOUE - Build ${BUILD_NUMBER}" }
