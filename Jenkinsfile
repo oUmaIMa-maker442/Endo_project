@@ -22,7 +22,7 @@ pipeline {
 
         stage('2 - Build Gradle') {
             steps {
-                bat 'gradlew.bat clean assembleDebug --no-daemon'
+                bat '.\\gradlew.bat clean assembleDebug --no-daemon'
             }
             post {
                 success {
@@ -34,7 +34,7 @@ pipeline {
 
         stage('3 - Tests Unitaires') {
             steps {
-                bat 'gradlew.bat test --no-daemon'
+                bat '.\\gradlew.bat test --no-daemon'
                 echo "Tests unitaires termines"
             }
             post {
@@ -61,7 +61,7 @@ pipeline {
                     }
                 }
                 sleep(time: 60, unit: 'SECONDS')
-                echo "Analyse SonarQube terminee - Quality Gate verifie manuellement"
+                echo "Analyse SonarQube terminee"
             }
         }
 
@@ -69,10 +69,12 @@ pipeline {
             steps {
                 bat "docker build -t %DOCKER_IMAGE%:%DOCKER_TAG% ."
                 bat "docker tag %DOCKER_IMAGE%:%DOCKER_TAG% %DOCKER_IMAGE%:latest"
+
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-credentials',
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS')]) {
+
                     bat 'echo %DOCKER_PASS%| docker login -u %DOCKER_USER% --password-stdin'
                     bat "docker push %DOCKER_IMAGE%:%DOCKER_TAG%"
                     bat "docker push %DOCKER_IMAGE%:latest"
@@ -82,12 +84,20 @@ pipeline {
 
         stage('6 - Deploy Kubernetes') {
             steps {
+                // Connexion cluster
                 bat 'kubectl config use-context minikube'
                 bat 'kubectl cluster-info'
                 bat 'kubectl get nodes'
+                bat 'kubectl get ns'
 
-                bat 'kubectl apply -f k8s\\deployment.yaml'
-                bat 'kubectl apply -f k8s\\service.yaml'
+                // Création namespace (safe)
+                bat 'kubectl create namespace mhealth || echo namespace existe deja'
+
+                // Deploy
+                bat 'kubectl apply -f k8s\\deployment.yaml -n mhealth'
+                bat 'kubectl apply -f k8s\\service.yaml -n mhealth'
+
+                // Vérification rollout
                 bat 'kubectl rollout status deployment/endo-deployment -n mhealth --timeout=120s'
             }
             post {
@@ -98,6 +108,7 @@ pipeline {
             }
         }
     }
+
     post {
         success { echo "PIPELINE AVANCE REUSSI - Build ${BUILD_NUMBER}" }
         failure { echo "PIPELINE AVANCE ECHOUE - Build ${BUILD_NUMBER}" }
