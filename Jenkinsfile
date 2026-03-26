@@ -93,16 +93,23 @@ pipeline {
                 // Création namespace (safe)
                 bat 'kubectl create namespace mhealth || echo namespace existe deja'
 
-                // Deploy
+                // 🔥 Nettoyage (IMPORTANT)
+                bat 'kubectl delete deployment endo-deployment -n mhealth || echo not found'
+                bat 'kubectl delete service endo-service -n mhealth || echo not found'
+
+                // Deploy propre
                 bat 'kubectl apply -f k8s\\deployment.yaml -n mhealth'
                 bat 'kubectl apply -f k8s\\service.yaml -n mhealth'
 
+                // Attente (évite bug rollout)
+                bat 'timeout /t 10'
+
                 // Vérification rollout
-                bat 'kubectl rollout status deployment/endo-deployment -n mhealth --timeout=120s'
+                bat 'kubectl rollout status deployment/endo-deployment -n mhealth --timeout=300s'
             }
             post {
                 failure {
-                    bat 'kubectl rollout undo deployment/endo-deployment -n mhealth'
+                    bat 'kubectl rollout undo deployment/endo-deployment -n mhealth || echo rollback impossible'
                     echo "ROLLBACK automatique declenche"
                 }
             }
