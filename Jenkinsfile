@@ -84,6 +84,7 @@ pipeline {
 
         stage('6 - Deploy Kubernetes') {
             steps {
+                bat 'minikube update-context'
                 bat 'minikube status || minikube start --driver=docker'
                 bat 'kubectl config use-context minikube'
                 bat 'kubectl create namespace mhealth || echo namespace existe deja'
