@@ -86,9 +86,18 @@ pipeline {
             steps {
                 bat 'minikube update-context'
                 bat 'kubectl config use-context minikube'
-                bat 'kubectl create namespace mhealth || echo namespace existe deja'
-                bat 'kubectl delete deployment endo-deployment -n mhealth || echo not found'
-                bat 'kubectl delete service endo-service -n mhealth || echo not found'
+                bat '''
+                    kubectl create namespace mhealth
+                    exit 0
+                '''
+                bat '''
+                    kubectl delete deployment endo-deployment -n mhealth
+                    exit 0
+                '''
+                bat '''
+                    kubectl delete service endo-service -n mhealth
+                    exit 0
+                '''
                 bat 'kubectl apply -f k8s\\deployment.yaml'
                 bat 'kubectl apply -f k8s\\service.yaml'
                 bat 'timeout /t 15'
