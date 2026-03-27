@@ -194,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 // Animation repeat callback
             }
         });
+        ERREUR_INTENTIONNELLE_POUR_TEST;
 
     }
 }
