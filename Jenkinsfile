@@ -87,8 +87,8 @@ pipeline {
                 bat 'minikube update-context'
                 bat 'kubectl config use-context minikube'
                 bat 'kubectl create namespace mhealth || echo namespace existe deja'
-                bat 'kubectl delete deployment endo-deployment -n mhealth --ignore-not-found=true'
-                bat 'kubectl delete service endo-service -n mhealth --ignore-not-found=true'
+                bat 'kubectl delete deployment endo-deployment -n mhealth || echo not found'
+                bat 'kubectl delete service endo-service -n mhealth || echo not found'
                 bat 'kubectl apply -f k8s\\deployment.yaml'
                 bat 'kubectl apply -f k8s\\service.yaml'
                 bat 'timeout /t 15'
@@ -97,7 +97,6 @@ pipeline {
             post {
                 failure {
                     echo "ROLLBACK automatique declenche"
-                    bat 'kubectl rollout undo deployment/endo-deployment -n mhealth --ignore-not-found=true || echo rollback impossible'
                 }
             }
         }
