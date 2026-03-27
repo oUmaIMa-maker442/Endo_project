@@ -84,27 +84,14 @@ pipeline {
 
         stage('6 - Deploy Kubernetes') {
             steps {
-                // Connexion cluster
+                bat 'minikube status || minikube start --driver=docker'
                 bat 'kubectl config use-context minikube'
-                bat 'kubectl cluster-info'
-                bat 'kubectl get nodes'
-                bat 'kubectl get ns'
-
-                // Création namespace (safe)
                 bat 'kubectl create namespace mhealth || echo namespace existe deja'
-
-                // 🔥 Nettoyage (IMPORTANT)
                 bat 'kubectl delete deployment endo-deployment -n mhealth || echo not found'
                 bat 'kubectl delete service endo-service -n mhealth || echo not found'
-
-                // Deploy propre
                 bat 'kubectl apply -f k8s\\deployment.yaml -n mhealth'
                 bat 'kubectl apply -f k8s\\service.yaml -n mhealth'
-
-                // Attente (évite bug rollout)
-                bat 'timeout /t 10'
-
-                // Vérification rollout
+                bat 'timeout /t 15'
                 bat 'kubectl rollout status deployment/endo-deployment -n mhealth --timeout=300s'
             }
             post {
