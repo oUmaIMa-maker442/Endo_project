@@ -100,7 +100,7 @@ pipeline {
                 '''
                 bat 'kubectl apply -f k8s\\deployment.yaml'
                 bat 'kubectl apply -f k8s\\service.yaml'
-                bat 'timeout /t 15'
+                bat 'ping -n 15 127.0.0.1 >nul'
                 bat 'kubectl rollout status deployment/endo-deployment -n mhealth --timeout=300s'
             }
             post {
