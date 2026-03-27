@@ -23,16 +23,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // ========== CODE SMELLS (ajoutés pour test SonarQube) ==========
-        try {
-            // bloc vide intentionnellement
-        } catch (Exception e) {
-            // vide intentionnellement
-        }
-        String motDePasse = "admin123"; // hardcoded
-        int x; int y; int z; // variables non utilisées
-        // ================================================================
-
         final LinearLayout homeLayout = findViewById(R.id.home);
         final LinearLayout trackLayout = findViewById(R.id.track);
         final LinearLayout communityLayout = findViewById(R.id.community);
@@ -53,9 +43,9 @@ public class HomeActivity extends AppCompatActivity {
 
         //set home fragment by default
         getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.fragmentContainer, HomeFragment.class,null)
-                .commit();
+                        .setReorderingAllowed(true)
+                        .replace(R.id.fragmentContainer, HomeFragment.class,null)
+                        .commit();
 
         homeLayout.setOnClickListener(view -> {
             //check if home is already selected or not
@@ -219,3 +209,4 @@ public class HomeActivity extends AppCompatActivity {
                 .commit();
     }
 }
+
